@@ -1,0 +1,55 @@
+import React from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { Shield, Wrench, Star } from 'lucide-react';
+
+export function MaintenanceProfilePage() {
+  const { user } = useAuth();
+
+  return (
+    <div className="max-w-3xl mx-auto space-y-6">
+      <div>
+        <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">Maintenance Staff Profile</h1>
+        <p className="text-xs text-slate-500 mt-1">Staff identity, technical specialization, and workload status.</p>
+      </div>
+
+      <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-8 space-y-6">
+        <div className="flex items-center gap-4 border-b border-slate-100 pb-6">
+          <img 
+            src={user?.avatar || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80"}
+            alt={user?.displayName} 
+            className="w-20 h-20 rounded-full object-cover border-2 border-slate-200 shadow-sm"
+          />
+          <div>
+            <h2 className="text-lg font-bold text-slate-900">{user?.displayName}</h2>
+            <p className="text-xs text-slate-500 font-mono">{user?.email}</p>
+            <span className="mt-2 inline-flex items-center gap-1 bg-amber-50 text-amber-800 text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-200">
+              <Shield className="w-3.5 h-3.5" /> Maintenance Staff Account
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <span className="text-slate-400 block text-[10px] uppercase font-bold">Department</span>
+            <span className="font-bold text-slate-900 mt-1 block">{user?.department || 'Electrical Maintenance'}</span>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <span className="text-slate-400 block text-[10px] uppercase font-bold">Technical Specialization</span>
+            <span className="font-bold text-indigo-600 mt-1 block">{user?.specialization || 'Electrical & Wiring'}</span>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <span className="text-slate-400 block text-[10px] uppercase font-bold">Performance Rating</span>
+            <span className="font-bold text-emerald-600 mt-1 flex items-center gap-1">
+              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+              4.9 / 5.0 Rating
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default MaintenanceProfilePage;

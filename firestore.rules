@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // User profile document permissions
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Complaints permissions
+    match /complaints/{complaintId} {
+      // Any authenticated student or staff can view complaints
+      allow read: if request.auth != null;
+      
+      // Students can create complaints
+      allow create: if request.auth != null;
+
+      // Staff can update complaint diagnosis, action, status, and evidence photos
+      allow update: if request.auth != null;
+
+      // Students can update rating & feedback text on completed complaints
+      allow update: if request.auth != null && resource.data.studentId == request.auth.uid;
+
+      // Prevent deletion to preserve audit history
+      allow delete: if false;
+    }
+
+    // Complaint audit logs
+    match /complaint_updates/{updateId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+    }
+
+    // In-app notifications
+    match /notifications/{notificationId} {
+      allow read: if request.auth != null && (resource.data.userId == request.auth.uid || resource.data.userId == null);
+      allow create: if request.auth != null;
+      allow update: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+
+    // Student feedback ratings
+    match /feedback/{feedbackId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null;
+    }
+  }
+}
